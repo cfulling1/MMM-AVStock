@@ -16,14 +16,15 @@ const headerTitle = ["Symbol", "Cur.Price", "Prev.Close", "CHG", "CHG%", "Volume
 
 Module.register("MMM-AVStock", {
   defaults: {
-    apiKey : "",
+    apiKey : "0D90K5UH049X8P6F",
     timeFormat: "DD-MM HH:mm",
-    symbols : ["aapl", "GOOGL", "005930.KS"],
-    alias: ["APPLE", "", "SAMSUNG Electronics"],
+    testsymbols : ["BTC", "ETH", "LTC", "XRP", "BCH", "XMR", "BTG", "XLM", "AAPL", "VOOG", "SQ", "PYPL", "TLRY", "CGC", "ACB", "APHA", "CTST"],
+    alias: ["BITCOIN", "ETHEREUM", "LITECOIN", "RIPPLE", "BTCASH", "MONERO", "BTGOLD", "STELLAR", "APPLE", "S&P500", "SQUARE", "PAYPAL", "TILRAY", "CANOPY", "AURORA", "APHRIA", "CANNTRUST"],
+    types : ["C", "C", "C", "C", "C", "C", "C", "C", "S", "S", "S", "S", "S", "S", "S", "S"],
     tickerDuration: 60,
     chartDays: 90,
     poolInterval : 1000*15, // (Changed in ver 1.1.0) - Only For Premium Account
-    mode : "table", // "table", "ticker", "series"
+    mode : "ticker", // "table", "ticker", "series"
     decimals : 4,
     candleSticks: false,
     coloredCandles: true,
@@ -62,8 +63,8 @@ Module.register("MMM-AVStock", {
 
   getStockName: function(symbol) {
     var stockAlias = symbol
-    var i = this.config.symbols.indexOf(symbol)
-    if (this.config.symbols.length == this.config.alias.length) {
+    var i = this.config.testsymbols.indexOf(symbol)
+    if (this.config.testsymbols.length == this.config.alias.length) {
       stockAlias = (this.config.alias[i]) ? this.config.alias[i] : stockAlias
     }
     return stockAlias
@@ -90,7 +91,7 @@ Module.register("MMM-AVStock", {
 
     var change = document.createElement("div")
     change.className = "change"
-    change.innerHTML = "---"
+    change.innerHTML = ""
     change.id = "change_series"
 
     var anchor = document.createElement("div")
@@ -135,8 +136,8 @@ Module.register("MMM-AVStock", {
     thead.appendChild(tr)
     tbl.appendChild(thead)
 
-    for (i in this.config.symbols) {
-      var stock = this.config.symbols[i]
+    for (i in this.config.testsymbols) {
+      var stock = this.config.testsymbols[i]
       var hashId = stock.hashCode()
       var tr = document.createElement("tr")
       tr.className = "stock"
@@ -167,8 +168,8 @@ Module.register("MMM-AVStock", {
     var ticker = document.createElement("div")
     ticker.className = "ticker"
     ticker.style.animationDuration = this.config.tickerDuration + "s";
-    for (i in this.config.symbols) {
-      var stock = this.config.symbols[i]
+    for (i in this.config.testsymbols) {
+      var stock = this.config.testsymbols[i]
       var hashId = stock.hashCode()
       var item = document.createElement("div")
       item.className = "ticker__item stock"
@@ -186,7 +187,7 @@ Module.register("MMM-AVStock", {
 
       var change = document.createElement("div")
       change.className = "change"
-      change.innerHTML = "---"
+      change.innerHTML = ""
       change.id = "change_" + hashId
 
       var anchor = document.createElement("div")
@@ -197,6 +198,10 @@ Module.register("MMM-AVStock", {
       item.appendChild(symbol)
       item.appendChild(anchor)
       ticker.appendChild(item)
+      console.log("--------")
+      console.log(anchor)
+      console.log(item)
+      console.log(ticker)
     }
 
     wrap.appendChild(ticker)
@@ -370,13 +375,16 @@ Module.register("MMM-AVStock", {
     var tr = document.getElementById("STOCK_" + hash)
     var ud = ""
     var price = document.getElementById("price_" + hash)
-    price.innerHTML = stock.price
-    var change = document.getElementById("change_" + hash)
-    change.innerHTML = stock.change
-    if (stock.change > 0) {
-      ud = "up"
-    } else if (stock.change < 0) {
-      ud = "down"
+    price.innerHTML = "$"+stock.price
+    if (stock.change != undefined) {
+      var change = document.getElementById("change_" + hash)
+      change.innerHTML = stock.change
+      
+      if (stock.change > 0) {
+        ud = "up"
+      } else if (stock.change < 0) {
+        ud = "down"
+      }
     }
     tr.className = "animated ticker__item stock " + ud
     setTimeout(()=>{
