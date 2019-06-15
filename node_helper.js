@@ -224,8 +224,8 @@ module.exports = NodeHelper.create({
   },
 
   prepareScan: function() {
-    for (s in this.config.testsymbols) {
-      var symbol = this.config.testsymbols[s]
+    for (s in this.config.symbols) {
+      var symbol = this.config.symbols[s]
       var symType = this.config.types[s]
 //      console.log(symbol + " " + symType)
       this.pooler.push(symbol)
